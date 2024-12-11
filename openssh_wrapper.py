@@ -6,7 +6,7 @@ import io
 import re
 import os
 import sys
-import pipes
+import shlex
 import signal
 import shutil
 import getpass
@@ -61,8 +61,8 @@ def b_quote(cmd_chunks):
     """
     quoted = []
     for chunk in cmd_chunks:
-        # pipes.quote works with text representation only
-        quoted.append(b(pipes.quote(u(chunk))))
+        # shlex.quote works with text representation only
+        quoted.append(b(shlex.quote(u(chunk))))
     return b(' ').join(quoted)
 
 
@@ -318,7 +318,7 @@ class SSHConnection(object):
             >>> get_scp_targets(['foo.txt', ], '/etc/passwd')
             ['/etc/passwd']
         """
-        result = self.run(b('test -d %s' % pipes.quote(u(target))))
+        result = self.run(b('test -d %s' % shlex.quote(u(target))))
         is_directory = result.returncode == 0
         if is_directory:
             ret = []
